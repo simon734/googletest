@@ -1,12 +1,3 @@
-// Copyright (c) 2014, Tencent Inc.
-// All rights reserved.
-//
-// sandyxie@tencent.com
-//
-//  Description:  Head File
-//       Author:  sandyxie
-//         Date:   2016.5.2
-
 #ifndef TGP_ACCL_TGPCOMM_UDP_LOST_CALC_EX_H
 #define TGP_ACCL_TGPCOMM_UDP_LOST_CALC_EX_H
 #include <errno.h>

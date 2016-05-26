@@ -1,14 +1,5 @@
-// Copyright (c) 2014, Tencent Inc.
-// All rights reserved.
-//
-// sandyxie@tencent.com
-//
-//  Description:  Implementing
-//       Author:  sandyxie
-//         Date:  2016.5.2
 
 #include "udp_lost_calc_ex.h"
-
 
 CUDPLostCalcEx::CUDPLostCalcEx() {
     is_send_mode_ = false;
