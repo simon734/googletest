@@ -30,6 +30,67 @@
 #include <stdio.h>
 
 #include "gtest/gtest.h"
+#include <Windows.h>
+#include "udp_lost_calc_ex.h"
+
+struct TestControl
+{
+	// 收发包间隔时间
+	int send_recv_interval;
+
+	// 丢包概率
+	int lost_ratio;
+
+	// 计算周期
+	int calc_interval;
+
+	// 测试时长
+	unsigned long calc_count;
+};
+
+struct data_stat
+{
+	// 发包数
+	int send_count;
+
+	// 丢包数
+	int recv_count;
+};
+
+struct udp_lost_calc_control: testing::Test, testing::WithParamInterface<TestControl>
+{
+	CUDPLostCalcEx lost_calc;
+	data_stat stat[5] = {};
+
+	udp_lost_calc_control()
+	{
+		lost_calc.Init(0);
+		::memset(stat, 0, sizeof(stat));
+	}
+};
+
+TEST_P(udp_lost_calc_control, ControlTest) {
+	auto calc_test = GetParam();
+
+	unsigned int last_tick = ::GetTickCount();
+	while(calc_test.calc_count > 0) {
+		::Sleep(calc_test.send_recv_interval);
+		unsigned int tick_interval = ::GetTickCount() - last_tick;
+		if (last_tick >= calc_test.calc_interval)
+		{
+			last_tick = ::GetTickCount();
+			calc_test.calc_count--;
+		}
+	}
+	EXPECT_EQ(stat[0].recv_count, stat[0].send_count);
+}
+
+INSTANTIATE_TEST_CASE_P(Default, udp_lost_calc_control,
+	testing::Values(
+		TestControl{ 15, 5, 1000, 10 },
+		TestControl{ 15, 2, 1000, 10 },
+		TestControl{ 20, 10, 1000, 10 }
+	));
 
 GTEST_API_ int main(int argc, char **argv) {
   printf("Running main() from gtest_main.cc\n");
